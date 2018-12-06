@@ -1,0 +1,37 @@
+body {
+    background: #E7E7E7;
+    color: #FAFAFA;
+}
+/* navbar */
+.navbar-default {
+    background-color: #1A237E;
+    border-color: #E7E7E7;
+}
+.navbar-brand {
+    font-size: 1.5rem;
+}
+nav a {
+    color: #FAFAFA;
+}
+nav a:hover {
+    color: #5C6BC0;
+}
+.card  {
+    background: #1A237E;
+    min-height: 70vh;
+    margin: 10vh auto;
+
+}
+h1 {
+    padding-top: 2rem;
+}
+#weather-content {
+    padding-top: 5vh;
+    padding-bottom: 5vh;
+}
+#temp {
+    font-size: 3rem;
+}
+#weather-type {
+    font-size: 1.2rem;
+}
