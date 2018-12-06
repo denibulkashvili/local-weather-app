@@ -1,5 +1,5 @@
 body {
-    background: #1A237E;
+    background: #E7E7E7;
     color: #FAFAFA;
 }
 /* navbar */
@@ -18,13 +18,17 @@ nav a:hover {
     color: #5C6BC0;
 }
 .card  {
-    background: #5C6BC0;
-    height: 70vh;
+    background: #1A237E;
+    min-height: 70vh;
     margin: 10vh auto;
 
 }
 h1 {
     padding-top: 2rem;
+}
+.weather-content {
+    padding-top: 5vh;
+    padding-bottom: 5vh;
 }
 .temp {
     font-size: 3rem;
