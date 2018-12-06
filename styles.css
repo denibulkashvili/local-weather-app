@@ -6,10 +6,9 @@ body {
 .navbar-default {
     background-color: #1A237E;
     border-color: #E7E7E7;
-    box-shadow: 1px 1px #E7E7E7;
 }
-nav {
-    font-size: 1.2rem;
+.navbar-brand {
+    font-size: 1.5rem;
 }
 nav a {
     color: #FAFAFA;
@@ -26,13 +25,13 @@ nav a:hover {
 h1 {
     padding-top: 2rem;
 }
-.weather-content {
+#weather-content {
     padding-top: 5vh;
     padding-bottom: 5vh;
 }
-.temp {
+#temp {
     font-size: 3rem;
 }
-.weather-type {
+#weather-type {
     font-size: 1.2rem;
 }
