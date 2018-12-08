@@ -1,3 +1,4 @@
+/* global $ */
 const WeatherURL = 'https://fcc-weather-api.glitch.me/api/current';
 class Weather {
   constructor(response) {
@@ -9,8 +10,12 @@ class Weather {
     return this.response.main.temp;
   }
 
-  get tempInFahrenheit() {
-    return (this.tempInCelsius * 9) / 5 + 32;
+  static tempInFahrenheit(tempInCelsius) {
+    return (tempInCelsius * 9) / 5 + 32;
+  }
+
+  get description() {
+    return this.response.weather[0] ? this.response.weather[0].main : '';
   }
 
   get location() {
@@ -18,19 +23,46 @@ class Weather {
   }
 
   get iconSource() {
-    return '/cloudy.png';
+    const iconID = this.response.weather[0] ? this.response.weather[0].id : 800;
+    switch (true) {
+      case iconID >= 200 && iconID <= 232:
+        return '/images/thunderstorm.png';
+      case (iconID >= 300 && iconID <= 321) || (iconID >= 500 && iconID <= 531):
+        return '/images/rain.png';
+      case iconID >= 600 && iconID <= 622:
+        return '/images/snow.png';
+      case iconID >= 701 && iconID <= 781:
+        return '/images/fog.png';
+      case iconID === 800:
+        return '/images/sunny.png';
+      case iconID >= 801 && iconID <= 804:
+        return '/images/partly-cloudy.png';
+      default:
+        return '/images/sunny.png';
+    }
   }
 
-  get celsiusSymbol() {
+  static get celsiusSymbol() {
     return '°C';
   }
 
-  get fahrenheitSymbol() {
+  static get fahrenheitSymbol() {
     return '°F';
   }
 }
-$.when( $.ready ).then(function() {
-  getWeatherData  = (lat, lon) => {
+
+
+$.when($.ready).then(() => {
+  const switchButtonID = '#switch-temp';
+  const tempValueID = '#temp';
+  const tempScaleID = '#temp-scale';
+  const tempBoxID = '#temp-box';
+  const locationID = '#location';
+  const descriptionID = '#weather-type';
+  const weatherIconID = '#weather-icon';
+  const CELSIUS = 'celsius';
+  const FAHRENHEIT = 'fahrenheit';
+  const getWeatherData  = (lat, lon) => {
     return new Promise(((resolve, reject) => {
       $.ajax({
         url: WeatherURL,
@@ -44,77 +76,63 @@ $.when( $.ready ).then(function() {
     }));
   };
 
-  switchTemperatureTo = (type) => {
-    //if celsius change to celsius
-    // if fahrenheit change
+  const setIconImageSource = (src) => {
+    $(weatherIconID).attr('src',src);
   };
 
-  displayTemperatureOnScreen = (dataToBeDisplayed) => {
-    //display location in location identifier
-    //show celsius temperature and it's symbol by default
-    //show icon on weather app
-    $('#results').html( '<strong>' + JSON.stringify(dataToBeDisplayed) + '</strong>' )
+  const displayTemperatureValues = (tempValue, tempSymbol) => {
+    $(tempValueID).text(tempValue);
+    $(tempScaleID).text(tempSymbol);
   };
 
-  getCoordinates = () => {
-    //change it to get real data
+  const displayTemperatureOnScreen = (dataToBeDisplayed) => {
+    $(locationID).text(dataToBeDisplayed.location);
+    $(descriptionID).text(dataToBeDisplayed.description);
+    setIconImageSource(dataToBeDisplayed.iconSource);
+    displayTemperatureValues(dataToBeDisplayed.tempInCelsius, Weather.celsiusSymbol);
+  };
+
+  const getCoordinates = () => {
+    // change it to get real data
     return new Promise((resolve,reject)=> {
-      let successful = true;
-      successful ? resolve({ lat: 28.4891452, lon: 77.0911675 }) : reject();
-    })
+      resolve({ lat: 28.4891452, lon: 77.0911675 });
+      // let successful = true;
+      // successful ? resolve({ lat: 28.4891452, lon: 77.0911675 }) : reject();
+    });
   };
 
-  (function onLoad() {
+  const buttonShouldNowSwitchTo = (type) => {
+    if (type === FAHRENHEIT) {
+      $(switchButtonID).data('scale', CELSIUS);
+      $(switchButtonID).text('Switch to Fahrenheit');
+    } else {
+      $(switchButtonID).data('scale', FAHRENHEIT);
+      $(switchButtonID).text('Switch to Celsius');
+    }
+  }
+
+  const onSwitchButtonClicked = () => {
+    const currentScale = $(switchButtonID).data('scale');
+    const tempInCelsius = $(tempBoxID).data('valueInCelsius');
+    if (currentScale === CELSIUS) {
+      buttonShouldNowSwitchTo(CELSIUS);
+      displayTemperatureValues(Weather.tempInFahrenheit(tempInCelsius), Weather.fahrenheitSymbol);
+    } else {
+      buttonShouldNowSwitchTo(FAHRENHEIT);
+      displayTemperatureValues(tempInCelsius, Weather.celsiusSymbol);
+    }
+  }
+
+  (function () {
+    buttonShouldNowSwitchTo(FAHRENHEIT);
+    $(switchButtonID).on('click', onSwitchButtonClicked);
     getCoordinates()
       .then(({ lat, lon }) => getWeatherData(lat, lon))
-      .then(responseData => {
+      .then((responseData) => {
         const weatherObj = new Weather(responseData);
+        $(tempBoxID).data('valueInCelsius', weatherObj.tempInCelsius);
         displayTemperatureOnScreen(weatherObj);
       })
       .catch(err => displayTemperatureOnScreen(err));
-  })();
+  }());
 });
-
-// example response
-// {
-//   'coord': {
-//   'lon': 77.09,
-//     'lat': 28.49
-// },
-//   'weather': [
-//   {
-//     'id': 711,
-//     'main': 'Smoke',
-//     'description': 'smoke',
-//     'icon': 'https://cdn.glitch.com/6e8889e5-7a72-48f0-a061-863548450de5%2F50d.png?1499366021771'
-//   }
-// ],
-//   'base': 'stations',
-//   'main': {
-//   'temp': 20.99,
-//     'pressure': 1016,
-//     'humidity': 49,
-//     'temp_min': 20,
-//     'temp_max': 22
-// },
-//   'visibility': 1200,
-//   'wind': {
-//   'speed': 2.07,
-//     'deg': 178.504
-// },
-//   'clouds': {
-//   'all': 20
-// },
-//   'dt': 1544072400,
-//   'sys': {
-//   'type': 1,
-//     'id': 9165,
-//     'message': 0.0035,
-//     'country': 'IN',
-//     'sunrise': 1544059818,
-//     'sunset': 1544097293
-// },
-//   'id': 1257567,
-//   'name': 'Samālkha',
-//   'cod': 200
-// }
