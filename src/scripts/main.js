@@ -62,13 +62,14 @@ $.when($.ready).then(() => {
   const weatherIconID = '#weather-icon';
   const CELSIUS = 'celsius';
   const FAHRENHEIT = 'fahrenheit';
-  const getWeatherData  = (lat, lon) => {
+
+  const getWeatherData = (lat, lon) => { // eslint-disable-arrow-body-style
     return new Promise(((resolve, reject) => {
       $.ajax({
         url: WeatherURL,
         data: {
           lat,
-          lon
+          lon,
         },
         success: resolve,
         error: reject,
@@ -77,7 +78,7 @@ $.when($.ready).then(() => {
   };
 
   const setIconImageSource = (src) => {
-    $(weatherIconID).attr('src',src);
+    $(weatherIconID).attr('src', src);
   };
 
   const displayTemperatureValues = (tempValue, tempSymbol) => {
@@ -92,24 +93,25 @@ $.when($.ready).then(() => {
     displayTemperatureValues(dataToBeDisplayed.tempInCelsius, Weather.celsiusSymbol);
   };
 
-  const getCoordinates = () => {
+  const getCoordinates = () => { // eslint-disable-arrow-body-style
     // change it to get real data
-    return new Promise((resolve,reject)=> {
-      resolve({ lat: 28.4891452, lon: 77.0911675 });
-      // let successful = true;
-      // successful ? resolve({ lat: 28.4891452, lon: 77.0911675 }) : reject();
+    return new Promise((resolve, reject) => {
+      const wasAbleToFindCoordinates = 1 < 2;
+      if (wasAbleToFindCoordinates) {
+        resolve({ lat: 28.4891452, lon: 77.0911675 });
+      } else {
+        reject(new Error('You need to allow browser to get location access'));
+      }
     });
   };
 
   const buttonShouldNowSwitchTo = (type) => {
     if (type === FAHRENHEIT) {
-      $(switchButtonID).data('scale', CELSIUS);
-      $(switchButtonID).text('Switch to Fahrenheit');
+      $(switchButtonID).data('scale', CELSIUS).text('Switch to Fahrenheit');
     } else {
-      $(switchButtonID).data('scale', FAHRENHEIT);
-      $(switchButtonID).text('Switch to Celsius');
+      $(switchButtonID).data('scale', FAHRENHEIT).text('Switch to Celsius');
     }
-  }
+  };
 
   const onSwitchButtonClicked = () => {
     const currentScale = $(switchButtonID).data('scale');
@@ -121,7 +123,11 @@ $.when($.ready).then(() => {
       buttonShouldNowSwitchTo(FAHRENHEIT);
       displayTemperatureValues(tempInCelsius, Weather.celsiusSymbol);
     }
-  }
+  };
+
+  const displayErrorOnScreen = (err) => {
+    $(locationID).text(err).css('color', 'red');
+  };
 
   (function () {
     buttonShouldNowSwitchTo(FAHRENHEIT);
@@ -133,6 +139,6 @@ $.when($.ready).then(() => {
         $(tempBoxID).data('valueInCelsius', weatherObj.tempInCelsius);
         displayTemperatureOnScreen(weatherObj);
       })
-      .catch(err => displayTemperatureOnScreen(err));
+      .catch(err => displayErrorOnScreen(err));
   }());
 });
