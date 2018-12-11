@@ -35,3 +35,8 @@ h1 {
 #weather-type {
     font-size: 1.2rem;
 }
+
+#about-content {
+    font-size: 1.5rem;
+    margin-top: 1rem;
+}
