@@ -7,11 +7,11 @@ class Weather {
   }
 
   get tempInCelsius() {
-    return this.response.main.temp;
+    return Math.round(this.response.main.temp);
   }
 
   static tempInFahrenheit(tempInCelsius) {
-    return (tempInCelsius * 9) / 5 + 32;
+    return Math.round((tempInCelsius * 9) / 5 + 32);
   }
 
   get description() {
