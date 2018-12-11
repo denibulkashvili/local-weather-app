@@ -16,5 +16,14 @@ app.get('/', (req, res) => {
     }
   });
 });
+app.get('/about', (req, res) => {
+  res.sendFile(`${__dirname}/about.html`, {} , (err) => {
+    if (err) {
+      console.log(`error ${err}`);
+    } else {
+      console.log('Served html file');
+    }
+  });
+});
 
 app.listen(PORT, () => `Started serving on port ${PORT}`);
