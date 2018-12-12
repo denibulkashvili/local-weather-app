@@ -94,11 +94,13 @@ $.when($.ready).then(() => {
   };
 
   const getCoordinates = () => { // eslint-disable-arrow-body-style
-    // change it to get real data
+    // TODO: handle errors
     return new Promise((resolve, reject) => {
-      const wasAbleToFindCoordinates = 1 < 2;
+      const wasAbleToFindCoordinates = true;
       if (wasAbleToFindCoordinates) {
-        resolve({ lat: 28.4891452, lon: 77.0911675 });
+        navigator.geolocation.getCurrentPosition(function (position) {
+          resolve({lat: position.coords.latitude, lon: position.coords.longitude});
+        });
       } else {
         reject(new Error('You need to allow browser to get location access'));
       }
