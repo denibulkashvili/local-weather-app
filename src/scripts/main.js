@@ -109,9 +109,8 @@ $.when($.ready).then(() => {
           case err.TIMEOUT:
             reject(new Error('The request to get your location timed out.'));
             break;
-          case error.UNKNOWN_ERROR:
+          default:
             reject(new Error('An unknown error occurred.'));
-            break;
           }
       });
     });
