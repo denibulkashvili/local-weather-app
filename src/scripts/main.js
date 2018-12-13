@@ -94,16 +94,26 @@ $.when($.ready).then(() => {
   };
 
   const getCoordinates = () => { // eslint-disable-arrow-body-style
-    // TODO: handle errors
     return new Promise((resolve, reject) => {
-      const wasAbleToFindCoordinates = true;
-      if (wasAbleToFindCoordinates) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-          resolve({lat: position.coords.latitude, lon: position.coords.longitude});
-        });
-      } else {
-        reject(new Error('You need to allow browser to get location access'));
-      }
+      navigator.geolocation.getCurrentPosition((position) => {
+        resolve({lat: position.coords.latitude, lon: position.coords.longitude});
+      },
+      (err) => {
+        switch(err.code) {
+          case err.PERMISSION_DENIED:
+            reject(new Error('You need to allow browser to get location access.'));
+            break;
+          case err.POSITION_UNAVAILABLE:
+            reject(new Error('Your location information is unavailable.'));
+            break;
+          case err.TIMEOUT:
+            reject(new Error('The request to get your location timed out.'));
+            break;
+          case error.UNKNOWN_ERROR:
+            reject(new Error('An unknown error occurred.'));
+            break;
+          }
+      });
     });
   };
 
