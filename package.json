@@ -2,9 +2,11 @@
   "name": "local-weather-app",
   "version": "1.0.0",
   "description": "Local Weather App",
-  "main": "main.js",
+  "main": "src/scripts/main.js",
   "scripts": {
     "lint": "eslint",
+    "start": "node server.js",
+    "debug": "node $NODE_DEBUG_OPTION  server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -25,5 +27,8 @@
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
     "prettier": "1.15.3"
+  },
+  "dependencies": {
+    "express": "^4.16.4"
   }
 }
